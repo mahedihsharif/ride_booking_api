@@ -13,7 +13,7 @@ const locationSchema = {
 const rideSchema = new Schema<IRide>(
   {
     rider: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    driver: { type: Schema.Types.ObjectId, ref: "User" }, //RIDES REQUEST ACCEPT KORAR PORE DATABASE E DRIVER ID UPDATE HOBE RIDE COLLECTION E
+    driver: { type: Schema.Types.ObjectId, ref: "User" },
 
     pickupLocation: { type: locationSchema, required: true, _id: false },
     destinationLocation: { type: locationSchema, required: true, _id: false },
@@ -33,6 +33,7 @@ const rideSchema = new Schema<IRide>(
       completedAt: Date,
       cancelledAt: Date,
       rejectedAt: Date,
+      inTransitAt: Date,
     },
   },
   {

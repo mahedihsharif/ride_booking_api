@@ -36,4 +36,62 @@ const rejectRide = catchAsync(
   }
 );
 
-export const DriverController = { acceptRide, rejectRide };
+const updateStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driverId = req.user.userId;
+    const rideId = req.params.id;
+    const { status } = req.body;
+
+    const result = await DriverService.updateStatus(rideId, driverId, status);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: `Ride Status: ${result.status}`,
+      data: result,
+    });
+  }
+);
+
+const driverEarnings = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driverId = req.user.userId;
+
+    const result = await DriverService.driverEarnings(driverId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Driver total earnings history",
+      data: {
+        rides: result.rides,
+        totalEarnings: result.totalEarnings,
+        totalCompletedRides: result.totalCompletedRides,
+      },
+    });
+  }
+);
+
+const setAvailability = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driverId = req.user.userId;
+    const { isAvailable } = req.body;
+
+    const result = await DriverService.setAvailability(driverId, isAvailable);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: `Availability updated to ${isAvailable ? "Online" : "Offline"}`,
+      data: result,
+    });
+  }
+);
+
+export const DriverController = {
+  acceptRide,
+  rejectRide,
+  updateStatus,
+  driverEarnings,
+  setAvailability,
+};

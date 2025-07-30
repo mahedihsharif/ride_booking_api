@@ -6,7 +6,7 @@ export function calculateDistanceInKm(
   from: { lat: number; lng: number },
   to: { lat: number; lng: number }
 ): number {
-  const R = 6371; // Earth radius in km
+  const R = 6371;
   const dLat = deg2rad(to.lat - from.lat);
   const dLng = deg2rad(to.lng - from.lng);
 

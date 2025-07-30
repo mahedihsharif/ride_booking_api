@@ -30,5 +30,6 @@ export interface IRide {
     completedAt?: Date;
     cancelledAt?: Date;
     rejectedAt?: Date;
+    inTransitAt?: Date;
   };
 }

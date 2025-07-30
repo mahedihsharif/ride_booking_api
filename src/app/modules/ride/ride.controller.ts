@@ -6,8 +6,8 @@ import sendResponse from "../../utils/sendResponse";
 import { RideService } from "./ride.service";
 
 const requestRide = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user.userId;
-  const result = await RideService.requestRide(userId, req.body);
+  const riderId = req.user.userId;
+  const result = await RideService.requestRide(riderId, req.body);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,

@@ -20,6 +20,7 @@ router.get("/:id", checkAuth(Role.RIDER), RideController.getRiderSingleRide);
 router.patch("/:id/cancel", checkAuth(Role.RIDER), RideController.cancelRide);
 
 /*--------------- Driver Routes Method -------------------*/
+
 router.patch(
   "/:id/accept",
   checkAuth(Role.DRIVER),
@@ -29,6 +30,11 @@ router.patch(
   "/:id/reject",
   checkAuth(Role.DRIVER),
   DriverController.rejectRide
+);
+router.patch(
+  "/:id/status",
+  checkAuth(Role.DRIVER),
+  DriverController.updateStatus
 );
 
 export const RideRoutes = router;

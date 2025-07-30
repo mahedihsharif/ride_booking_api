@@ -7,13 +7,13 @@ import { Role } from "../user/user.interface";
 import { IRide, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 
-const requestRide = async (userId: string, payload: IRide) => {
+const requestRide = async (riderId: string, payload: IRide) => {
   const pickupAddress = payload.pickupLocation.address;
   const destinationAddress = payload.destinationLocation.address;
   const pickupCoords = await getCoordinatesFromAddress(pickupAddress);
   const destinationCoords = await getCoordinatesFromAddress(destinationAddress);
   const newRiderData = {
-    rider: userId,
+    rider: riderId,
     pickupLocation: {
       address: pickupAddress,
       lat: pickupCoords?.lat,
