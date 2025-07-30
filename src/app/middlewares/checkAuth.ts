@@ -34,10 +34,11 @@ export const checkAuth =
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(
           httpStatus.FORBIDDEN,
-          "You are not permitted to view this route!"
+          "You are not permitted to view this route"
         );
       }
       req.user = verifiedToken;
+
       next();
     } catch (err) {
       next(err);

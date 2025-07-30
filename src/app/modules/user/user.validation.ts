@@ -14,7 +14,7 @@ export const createUserZodSchema = z.object({
     .max(100, { message: "Email cannot exceed 100 characters." }),
   password: z
     .string({ invalid_type_error: "Password must be string" })
-    .min(8, { message: "Password must be at least 8 characters long." }),
+    .min(6, { message: "Password must be at least 6 characters long." }),
   phone: z
     .string({ invalid_type_error: "Phone number must be string" })
     .regex(/^(?:\+880|0)?1[3-9][0-9]{8}$/, {
@@ -37,7 +37,7 @@ export const updateUserZodSchema = z.object({
     .optional(),
   password: z
     .string({ invalid_type_error: "Password must be string" })
-    .min(8, { message: "Password must be at least 8 characters long." })
+    .min(6, { message: "Password must be at least 6 characters long." })
     .optional(),
 
   role: z.enum(Object.values(Role) as [string]).optional(),
