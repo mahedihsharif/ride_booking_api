@@ -25,8 +25,10 @@ const getAllUsers = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: "All Users Retrieved Successfully!",
-      data: result.data,
-      meta: result.meta,
+      data: {
+        users: result.data,
+        meta: result.meta,
+      },
     });
   }
 );
@@ -54,4 +56,28 @@ const updateUser = catchAsync(
   }
 );
 
-export const UserController = { createUser, getAllUsers, updateUser };
+const blockedUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const decodedToken = req.user;
+
+    const result = await UserService.blockedUser(
+      userId,
+      decodedToken as JwtPayload
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User Updated Successfully!",
+      data: result,
+    });
+  }
+);
+
+export const UserController = {
+  createUser,
+  getAllUsers,
+  updateUser,
+  blockedUser,
+};

@@ -88,10 +88,57 @@ const setAvailability = catchAsync(
   }
 );
 
+const getAllDrivers = catchAsync(
+  async (_req: Request, res: Response, next: NextFunction) => {
+    const result = await DriverService.getAllDrivers();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "All Drivers Retrieved Successfully!",
+      data: {
+        drivers: result.data,
+        meta: result.meta,
+      },
+    });
+  }
+);
+
+const approveDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driverId = req.params.id;
+    const result = await DriverService.approveDriver(driverId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Driver approval status is Success!",
+      data: result,
+    });
+  }
+);
+
+const suspendDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driverId = req.params.id;
+    const result = await DriverService.suspendDriver(driverId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Driver status is Suspended!",
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   acceptRide,
   rejectRide,
   updateStatus,
   driverEarnings,
   setAvailability,
+  getAllDrivers,
+  approveDriver,
+  suspendDriver,
 };

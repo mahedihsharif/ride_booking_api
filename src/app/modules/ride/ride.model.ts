@@ -10,6 +10,17 @@ const locationSchema = {
   lng: { type: Number, required: true },
 };
 
+const statusHistorySchema = new Schema(
+  {
+    status: {
+      type: String,
+      enum: Object.values(RideStatus),
+    },
+    timestamp: Date,
+  },
+  { _id: false }
+);
+
 const rideSchema = new Schema<IRide>(
   {
     rider: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -25,16 +36,7 @@ const rideSchema = new Schema<IRide>(
       enum: Object.keys(RideStatus),
       default: RideStatus.REQUESTED,
     },
-
-    timestamps: {
-      requestedAt: { type: Date, default: Date.now },
-      acceptedAt: Date,
-      pickedUpAt: Date,
-      completedAt: Date,
-      cancelledAt: Date,
-      rejectedAt: Date,
-      inTransitAt: Date,
-    },
+    history: [statusHistorySchema],
   },
   {
     timestamps: true,
@@ -42,6 +44,20 @@ const rideSchema = new Schema<IRide>(
   }
 );
 
+// by default history set
+rideSchema.pre("save", function (next) {
+  if (this.isNew && (!this.history || this.history.length === 0)) {
+    this.history = [
+      {
+        status: this.status || RideStatus.REQUESTED,
+        timestamp: new Date(),
+      },
+    ];
+  }
+  next();
+});
+
+//fare calculate
 rideSchema.pre("save", async function (next) {
   try {
     const ride = this;

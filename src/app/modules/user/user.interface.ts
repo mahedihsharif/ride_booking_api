@@ -6,14 +6,19 @@ export enum Role {
   DRIVER = "DRIVER",
 }
 
+export enum Blocked {
+  BLOCKED = "BLOCKED",
+  UN_BLOCKED = "UN_BLOCKED",
+}
+
 export interface IUser {
   _id?: Types.ObjectId;
   name: string;
   email: string;
   password: string;
   phone: string;
-  role: Role;
-  isBlocked?: boolean;
-  isApproved?: boolean; // Only for driver
-  isAvailable?: boolean; // Only for driver
+  role?: Role;
+  isBlocked?: Blocked;
+  driver?: Types.ObjectId;
+  // admin?: Types.ObjectId;
 }

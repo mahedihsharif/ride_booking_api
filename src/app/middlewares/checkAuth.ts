@@ -26,11 +26,6 @@ export const checkAuth =
         throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exist!");
       }
 
-      if (isUserExist) {
-        if (isUserExist.isBlocked)
-          throw new AppError(httpStatus.BAD_REQUEST, "User is Blocked");
-      }
-
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(
           httpStatus.FORBIDDEN,

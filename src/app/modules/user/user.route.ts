@@ -12,10 +12,11 @@ router.post(
   validateRequest(createUserZodSchema),
   UserController.createUser
 );
-router.get("/all-users", checkAuth(Role.ADMIN), UserController.getAllUsers);
+router.get("/", checkAuth(Role.ADMIN), UserController.getAllUsers);
 router.patch(
   "/:id",
   checkAuth(...Object.values(Role)),
   UserController.updateUser
 );
+router.patch("/block/:id", checkAuth(Role.ADMIN), UserController.blockedUser);
 export const UserRoutes = router;

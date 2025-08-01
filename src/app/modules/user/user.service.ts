@@ -3,7 +3,7 @@ import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
-import { IUser, Role } from "./user.interface";
+import { Blocked, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 
 const createUser = async (payload: IUser) => {
@@ -70,23 +70,12 @@ const updateUser = async (
   // 2. If trying to change role
   if (payload.role) {
     if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
-      console.log(payload.role === Role.ADMIN);
       if (payload.role === Role.ADMIN) {
         throw new AppError(
           httpStatus.FORBIDDEN,
           "You are not authorized to change admin roles!"
         );
       }
-    }
-  }
-
-  // 3. If trying to change status fields
-  if (payload.isApproved || payload.isAvailable || payload.isBlocked) {
-    if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not authorized to update status fields!"
-      );
     }
   }
 
@@ -105,4 +94,28 @@ const updateUser = async (
   return newUpdatedUser;
 };
 
-export const UserService = { createUser, getAllUsers, updateUser };
+const blockedUser = async (userId: string, decodedToken: JwtPayload) => {
+  const isExistUser = await User.findById(userId);
+  if (!isExistUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User doesn't found!");
+  }
+
+  if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not authorized to view this route."
+    );
+  }
+
+  if (isExistUser.isBlocked !== Blocked.UN_BLOCKED) {
+    isExistUser.isBlocked = Blocked.UN_BLOCKED;
+    await isExistUser.save();
+    return isExistUser;
+  }
+
+  isExistUser.isBlocked = Blocked.BLOCKED;
+  await isExistUser.save();
+  return isExistUser;
+};
+
+export const UserService = { createUser, getAllUsers, updateUser, blockedUser };

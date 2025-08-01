@@ -70,11 +70,14 @@ const cancelRide = async (rideId: string, riderId: string) => {
   }
 
   // Calculate time difference in minutes
-  const requestedAt = ride.timestamps?.requestedAt;
-  if (!requestedAt) throw new Error("Requested time missing");
+  const requestedAt = ride.history.find(
+    (entry) => entry.status === RideStatus.REQUESTED
+  );
+
+  if (!requestedAt?.timestamp) throw new Error("Requested time missing");
 
   const now = new Date();
-  const diffMs = now.getTime() - requestedAt.getTime();
+  const diffMs = now.getTime() - requestedAt?.timestamp.getTime();
   const diffMinutes = diffMs / (1000 * 60);
 
   const CANCEL_WINDOW = Number(envVars.CANCEL_WINDOW_TIME) || 2;
@@ -86,9 +89,37 @@ const cancelRide = async (rideId: string, riderId: string) => {
   }
 
   ride.status = RideStatus.CANCELLED;
-  ride.timestamps.cancelledAt = new Date();
+  ride.history.push({
+    status: RideStatus.CANCELLED,
+    timestamp: new Date(),
+  });
   await ride.save();
   return ride;
+};
+
+const getAllRides = async () => {
+  const rides = await Ride.find({});
+  const totalRides = await Ride.countDocuments();
+  return {
+    data: rides,
+    meta: {
+      total: totalRides,
+    },
+  };
+};
+
+const getAllRidesHistory = async () => {
+  const rides = await Ride.find()
+    .select("rider driver status fare history")
+    .populate("rider", "name email phone")
+    .populate("driver", "name email phone");
+  const totalRides = await Ride.countDocuments();
+  return {
+    data: rides,
+    meta: {
+      total: totalRides,
+    },
+  };
 };
 
 export const RideService = {
@@ -96,4 +127,6 @@ export const RideService = {
   getRiderAllRides,
   getRiderSingleRide,
   cancelRide,
+  getAllRides,
+  getAllRidesHistory,
 };

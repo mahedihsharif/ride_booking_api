@@ -6,6 +6,8 @@ import { RideStatus } from "../ride/ride.interface";
 import { Ride } from "../ride/ride.model";
 import { Role } from "../user/user.interface";
 import { User } from "../user/user.model";
+import { ApprovedStatus } from "./driver.interface";
+import { Driver } from "./driver.model";
 
 const acceptRide = async (rideId: string, driverId: string) => {
   const ride = await Ride.findById(rideId);
@@ -21,7 +23,10 @@ const acceptRide = async (rideId: string, driverId: string) => {
 
   ride.status = RideStatus.ACCEPTED;
   ride.driver = new Types.ObjectId(driverId);
-  ride.timestamps.acceptedAt = new Date();
+  ride.history.push({
+    status: RideStatus.ACCEPTED,
+    timestamp: new Date(),
+  });
   await ride.save();
   return ride;
 };
@@ -36,8 +41,12 @@ const rejectRide = async (rideId: string, driverId: string) => {
   }
 
   ride.status = RideStatus.REJECTED;
-  ride.timestamps.rejectedAt = new Date();
-  return await ride.save();
+  ride.history.push({
+    status: RideStatus.REJECTED,
+    timestamp: new Date(),
+  });
+  await ride.save();
+  return ride;
 };
 
 const updateStatus = async (
@@ -71,9 +80,12 @@ const updateStatus = async (
   ride.status = status;
 
   const now = new Date();
-  if (status === RideStatus.PICKED_UP) ride.timestamps.pickedUpAt = now;
-  if (status === RideStatus.IN_TRANSIT) ride.timestamps.inTransitAt = now;
-  if (status === RideStatus.COMPLETED) ride.timestamps.completedAt = now;
+  if (status === RideStatus.PICKED_UP)
+    ride.history.push({ status: RideStatus.PICKED_UP, timestamp: now });
+  if (status === RideStatus.IN_TRANSIT)
+    ride.history.push({ status: RideStatus.IN_TRANSIT, timestamp: now });
+  if (status === RideStatus.COMPLETED)
+    ride.history.push({ status: RideStatus.COMPLETED, timestamp: now });
 
   await ride.save();
   return ride;
@@ -99,17 +111,55 @@ const driverEarnings = async (driverId: string) => {
 };
 
 const setAvailability = async (driverId: string, isAvailable: boolean) => {
-  const user = await User.findById(driverId);
-  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  if (user.role !== Role.DRIVER)
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "Only drivers can update availability"
-    );
+  const driver = await Driver.findOne({ user: driverId });
+  if (!driver) throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
 
-  user.isAvailable = isAvailable;
-  await user.save();
-  return user;
+  driver.isAvailable = isAvailable;
+  await driver.save();
+  return driver;
+};
+
+const getAllDrivers = async () => {
+  const drivers = await User.find({ role: Role.DRIVER });
+  const totalDrivers = await User.countDocuments({ role: Role.DRIVER });
+  return {
+    data: drivers,
+    meta: {
+      total: totalDrivers,
+    },
+  };
+};
+
+const approveDriver = async (driverId: string) => {
+  const driver = await Driver.findOne({ user: driverId });
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+  if (driver.isApprovedStatus === ApprovedStatus.APPROVED) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `Driver is already ${driver.isApprovedStatus}`
+    );
+  }
+  driver.isApprovedStatus = ApprovedStatus.APPROVED;
+  await driver.save();
+  return driver;
+};
+
+const suspendDriver = async (driverId: string) => {
+  const driver = await Driver.findOne({ user: driverId });
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+  if (driver.isApprovedStatus === ApprovedStatus.SUSPENDED) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `Driver is already ${driver.isApprovedStatus}`
+    );
+  }
+  driver.isApprovedStatus = ApprovedStatus.SUSPENDED;
+  await driver.save();
+  return driver;
 };
 
 export const DriverService = {
@@ -118,4 +168,7 @@ export const DriverService = {
   updateStatus,
   driverEarnings,
   setAvailability,
+  getAllDrivers,
+  approveDriver,
+  suspendDriver,
 };

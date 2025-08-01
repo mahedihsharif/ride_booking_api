@@ -8,7 +8,7 @@ export const router = Router();
 
 const moduleRoutes = [
   {
-    path: "/user",
+    path: "/users",
     route: UserRoutes,
   },
   {
@@ -20,7 +20,7 @@ const moduleRoutes = [
     route: RideRoutes,
   },
   {
-    path: "/driver",
+    path: "/drivers",
     route: DriverRoutes,
   },
 ];

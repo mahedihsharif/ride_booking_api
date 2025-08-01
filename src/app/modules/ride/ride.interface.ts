@@ -16,6 +16,11 @@ export interface ILocation {
   lng: number;
 }
 
+export interface IStatusHistory {
+  status: RideStatus;
+  timestamp: Date;
+}
+
 export interface IRide {
   rider: Types.ObjectId;
   driver?: Types.ObjectId;
@@ -23,13 +28,5 @@ export interface IRide {
   destinationLocation: ILocation;
   fare: number;
   status: RideStatus;
-  timestamps: {
-    requestedAt: Date;
-    acceptedAt?: Date;
-    pickedUpAt?: Date;
-    completedAt?: Date;
-    cancelledAt?: Date;
-    rejectedAt?: Date;
-    inTransitAt?: Date;
-  };
+  history: IStatusHistory[];
 }

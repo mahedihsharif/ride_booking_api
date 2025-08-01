@@ -15,7 +15,13 @@ router.post(
   validateRequest(createRideZodSchema),
   RideController.requestRide
 );
+router.get("/", checkAuth(Role.ADMIN), RideController.getAllRides);
 router.get("/me", checkAuth(Role.RIDER), RideController.getRiderAllRides);
+router.get(
+  "/history",
+  checkAuth(Role.ADMIN),
+  RideController.getAllRidesHistory
+);
 router.get("/:id", checkAuth(Role.RIDER), RideController.getRiderSingleRide);
 router.patch("/:id/cancel", checkAuth(Role.RIDER), RideController.cancelRide);
 
