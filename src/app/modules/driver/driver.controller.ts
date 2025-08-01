@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
+import { AvailabilityStatus } from "./driver.interface";
 import { DriverService } from "./driver.service";
 
 const acceptRide = catchAsync(
@@ -24,7 +25,6 @@ const rejectRide = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rideId = req.params.id;
     const driverId = req.user.userId;
-
     const result = await DriverService.rejectRide(rideId, driverId);
 
     sendResponse(res, {
@@ -75,14 +75,17 @@ const driverEarnings = catchAsync(
 const setAvailability = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const driverId = req.user.userId;
-    const { isAvailable } = req.body;
 
-    const result = await DriverService.setAvailability(driverId, isAvailable);
+    const result = await DriverService.setAvailability(driverId);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: `Availability updated to ${isAvailable ? "Online" : "Offline"}`,
+      message: `Availability updated to ${
+        result.isAvailable === AvailabilityStatus.AVAILABLE
+          ? "Online"
+          : "Offline"
+      }`,
       data: result,
     });
   }
@@ -132,6 +135,21 @@ const suspendDriver = catchAsync(
   }
 );
 
+const availableDriver = catchAsync(
+  async (_req: Request, res: Response, next: NextFunction) => {
+    const result = await DriverService.availableDriver();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Available Drivers",
+      data: {
+        drivers: result,
+      },
+    });
+  }
+);
+
 export const DriverController = {
   acceptRide,
   rejectRide,
@@ -141,4 +159,5 @@ export const DriverController = {
   getAllDrivers,
   approveDriver,
   suspendDriver,
+  availableDriver,
 };

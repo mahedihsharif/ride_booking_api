@@ -3,7 +3,8 @@ import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { getCoordinatesFromAddress } from "../../utils/getCoordinates";
-import { Role } from "../user/user.interface";
+import { ActiveStatus, Role } from "../user/user.interface";
+import { User } from "../user/user.model";
 import { IRide, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 
@@ -60,14 +61,23 @@ const getRiderSingleRide = async (userId: string, decodedToken: JwtPayload) => {
   return ride;
 };
 
-const cancelRide = async (rideId: string, riderId: string) => {
-  const ride = await Ride.findOne({ _id: rideId, rider: riderId });
+const cancelRide = async (rideId: string, userId: string) => {
+  console.log(rideId, userId);
+  const ride = await Ride.findOne({ _id: rideId, rider: userId });
   if (!ride) throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
   if (ride) {
     if (ride.status !== RideStatus.REQUESTED) {
       throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now");
     }
   }
+
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(httpStatus.BAD_REQUEST, "User not found");
+  if (user.isActive === ActiveStatus.BLOCKED)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Your are temporary Blocked by unnecessary cancel attempts"
+    );
 
   // Calculate time difference in minutes
   const requestedAt = ride.history.find(
@@ -88,6 +98,23 @@ const cancelRide = async (rideId: string, riderId: string) => {
     );
   }
 
+  const today = now.toDateString();
+  const lastCancel = user.lastCancelDate?.toDateString();
+  // reset counter if it's a new day
+  if (lastCancel !== today) {
+    user.cancelAttempts = 1;
+    user.lastCancelDate = now;
+  } else {
+    if (user.cancelAttempts) {
+      user.cancelAttempts += 1;
+    }
+  }
+
+  // block user if cancel limit exceeds
+  if (user.cancelAttempts && user.cancelAttempts > 3) {
+    user.isActive = ActiveStatus.BLOCKED;
+  }
+  await user.save();
   ride.status = RideStatus.CANCELLED;
   ride.history.push({
     status: RideStatus.CANCELLED,
@@ -122,11 +149,48 @@ const getAllRidesHistory = async () => {
   };
 };
 
+const ridesAvailable = async () => {
+  const rides = await Ride.find({ status: RideStatus.REQUESTED });
+
+  if (rides.length < 1) {
+    throw new AppError(httpStatus.NOT_FOUND, "Rides is not available now");
+  }
+
+  return rides;
+};
+
+const getAllCompletedRides = async (driverId: string) => {
+  const rides = await Ride.find({
+    driver: driverId,
+    status: RideStatus.COMPLETED,
+  });
+  const totalRides = await Ride.countDocuments({
+    driver: driverId,
+    status: RideStatus.COMPLETED,
+  });
+
+  if (rides.length < 1) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Rides is not found with Completed History"
+    );
+  }
+
+  return {
+    data: rides,
+    meta: {
+      total: totalRides,
+    },
+  };
+};
+
 export const RideService = {
   requestRide,
   getRiderAllRides,
   getRiderSingleRide,
   cancelRide,
   getAllRides,
+  ridesAvailable,
   getAllRidesHistory,
+  getAllCompletedRides,
 };

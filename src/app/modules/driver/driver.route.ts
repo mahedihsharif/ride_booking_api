@@ -8,6 +8,12 @@ const router = Router();
 router.get("/", checkAuth(Role.ADMIN), DriverController.getAllDrivers);
 
 router.get(
+  "/available-driver",
+  checkAuth(Role.RIDER),
+  DriverController.availableDriver
+);
+
+router.get(
   "/earnings",
   checkAuth(Role.DRIVER),
   DriverController.driverEarnings

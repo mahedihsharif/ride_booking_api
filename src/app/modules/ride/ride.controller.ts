@@ -54,10 +54,8 @@ const getRiderSingleRide = catchAsync(
 const cancelRide = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rideId = req.params.id;
-
-    const riderId = req.user.userId;
-
-    const result = await RideService.cancelRide(rideId, riderId);
+    const userId = req.user.userId;
+    const result = await RideService.cancelRide(rideId, userId);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -98,11 +96,43 @@ const getAllRidesHistory = catchAsync(
   }
 );
 
+const ridesAvailable = catchAsync(
+  async (_req: Request, res: Response, next: NextFunction) => {
+    const result = await RideService.ridesAvailable();
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Available rides",
+      data: {
+        rides: result,
+      },
+    });
+  }
+);
+
+const getAllCompletedRides = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driverId = req.user.userId;
+    const result = await RideService.getAllCompletedRides(driverId);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "All Completed Rides Retrieved Successfully",
+      data: {
+        rides: result.data,
+        meta: result.meta,
+      },
+    });
+  }
+);
+
 export const RideController = {
   requestRide,
   getRiderAllRides,
   getRiderSingleRide,
   cancelRide,
   getAllRides,
+  ridesAvailable,
   getAllRidesHistory,
+  getAllCompletedRides,
 };

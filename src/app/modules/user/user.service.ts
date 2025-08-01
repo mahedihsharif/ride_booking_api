@@ -3,7 +3,7 @@ import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
-import { Blocked, IUser, Role } from "./user.interface";
+import { ActiveStatus, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 
 const createUser = async (payload: IUser) => {
@@ -27,9 +27,9 @@ const createUser = async (payload: IUser) => {
   return user;
 };
 
-const getAllUsers = async () => {
-  const users = await User.find({});
-  const totalUsers = await User.countDocuments();
+const getAllRiders = async () => {
+  const users = await User.find({ role: Role.RIDER });
+  const totalUsers = await User.countDocuments({ role: Role.RIDER });
   return {
     data: users,
     meta: {
@@ -107,15 +107,20 @@ const blockedUser = async (userId: string, decodedToken: JwtPayload) => {
     );
   }
 
-  if (isExistUser.isBlocked !== Blocked.UN_BLOCKED) {
-    isExistUser.isBlocked = Blocked.UN_BLOCKED;
+  if (isExistUser.isActive !== ActiveStatus.ACTIVE) {
+    isExistUser.isActive = ActiveStatus.ACTIVE;
     await isExistUser.save();
     return isExistUser;
   }
 
-  isExistUser.isBlocked = Blocked.BLOCKED;
+  isExistUser.isActive = ActiveStatus.BLOCKED;
   await isExistUser.save();
   return isExistUser;
 };
 
-export const UserService = { createUser, getAllUsers, updateUser, blockedUser };
+export const UserService = {
+  createUser,
+  getAllRiders,
+  updateUser,
+  blockedUser,
+};

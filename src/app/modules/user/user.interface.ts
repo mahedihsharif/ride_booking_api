@@ -6,9 +6,9 @@ export enum Role {
   DRIVER = "DRIVER",
 }
 
-export enum Blocked {
+export enum ActiveStatus {
+  ACTIVE = "ACTIVE",
   BLOCKED = "BLOCKED",
-  UN_BLOCKED = "UN_BLOCKED",
 }
 
 export interface IUser {
@@ -18,7 +18,8 @@ export interface IUser {
   password: string;
   phone: string;
   role?: Role;
-  isBlocked?: Blocked;
+  isActive?: ActiveStatus;
+  cancelAttempts?: number;
+  lastCancelDate?: Date;
   driver?: Types.ObjectId;
-  // admin?: Types.ObjectId;
 }

@@ -17,6 +17,12 @@ router.post(
 );
 router.get("/", checkAuth(Role.ADMIN), RideController.getAllRides);
 router.get("/me", checkAuth(Role.RIDER), RideController.getRiderAllRides);
+router.get("/available", checkAuth(Role.DRIVER), RideController.ridesAvailable);
+router.get(
+  "/completed",
+  checkAuth(Role.DRIVER),
+  RideController.getAllCompletedRides
+);
 router.get(
   "/history",
   checkAuth(Role.ADMIN),

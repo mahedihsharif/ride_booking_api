@@ -18,13 +18,13 @@ const createUser = catchAsync(
   }
 );
 
-const getAllUsers = catchAsync(
+const getAllRiders = catchAsync(
   async (_req: Request, res: Response, next: NextFunction) => {
-    const result = await UserService.getAllUsers();
+    const result = await UserService.getAllRiders();
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "All Users Retrieved Successfully!",
+      message: "All Riders Retrieved Successfully!",
       data: {
         users: result.data,
         meta: result.meta,
@@ -77,7 +77,7 @@ const blockedUser = catchAsync(
 
 export const UserController = {
   createUser,
-  getAllUsers,
+  getAllRiders,
   updateUser,
   blockedUser,
 };

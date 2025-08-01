@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 import { Driver } from "../driver/driver.model";
-import { Blocked, IUser, Role } from "./user.interface";
+import { ActiveStatus, IUser, Role } from "./user.interface";
 
 const userSchema = new Schema<IUser>(
   {
@@ -24,13 +24,19 @@ const userSchema = new Schema<IUser>(
       unique: true,
       trim: true,
     },
-    isBlocked: {
+    isActive: {
       type: String,
-      enum: Object.values(Blocked),
-      default: Blocked.UN_BLOCKED,
+      enum: Object.values(ActiveStatus),
+      default: ActiveStatus.ACTIVE,
+    },
+    cancelAttempts: {
+      type: Number,
+      default: 0,
+    },
+    lastCancelDate: {
+      type: Date,
     },
     driver: { type: Schema.Types.ObjectId, ref: "Driver" },
-    // admin: { type: Schema.Types.ObjectId, ref: "Admin" },
   },
   { timestamps: true, versionKey: false }
 );

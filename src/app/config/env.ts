@@ -16,6 +16,7 @@ interface EnvConfig {
   OPEN_CASE_MAPS_API_KEY: string;
   PER_KM_RATE: string;
   CANCEL_WINDOW_TIME: string;
+  GEO_LOCATION_API: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -31,6 +32,7 @@ const loadEnvVariables = (): EnvConfig => {
     "OPEN_CASE_MAPS_API_KEY",
     "PER_KM_RATE",
     "CANCEL_WINDOW_TIME",
+    "GEO_LOCATION_API",
   ];
   requiredEnvVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -51,6 +53,7 @@ const loadEnvVariables = (): EnvConfig => {
     OPEN_CASE_MAPS_API_KEY: process.env.OPEN_CASE_MAPS_API_KEY as string,
     PER_KM_RATE: process.env.PER_KM_RATE as string,
     CANCEL_WINDOW_TIME: process.env.CANCEL_WINDOW_TIME as string,
+    GEO_LOCATION_API: process.env.GEO_LOCATION_API as string,
   };
 };
 
