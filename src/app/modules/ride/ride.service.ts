@@ -62,7 +62,6 @@ const getRiderSingleRide = async (userId: string, decodedToken: JwtPayload) => {
 };
 
 const cancelRide = async (rideId: string, userId: string) => {
-  console.log(rideId, userId);
   const ride = await Ride.findOne({ _id: rideId, rider: userId });
   if (!ride) throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
   if (ride) {

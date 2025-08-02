@@ -4,7 +4,7 @@ import AppError from "../../errorHelpers/AppError";
 import { allowedStatuses, PartialRideStatus } from "../../utils/allowedStatus";
 import { RideStatus } from "../ride/ride.interface";
 import { Ride } from "../ride/ride.model";
-import { Role } from "../user/user.interface";
+import { ActiveStatus, Role } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { ApprovedStatus, AvailabilityStatus } from "./driver.interface";
 import { Driver } from "./driver.model";
@@ -54,14 +54,43 @@ const rejectRide = async (rideId: string, driverId: string) => {
       throw new AppError(httpStatus.BAD_REQUEST, "'Ride cannot be rejected'");
     }
   }
+  const user = await User.findById(driverId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+  if (user.isActive === ActiveStatus.BLOCKED)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Your are temporary Blocked by unnecessary REJECT attempts, please contact with admin"
+    );
 
   const driver = await Driver.findOne({ user: driverId });
   if (driver?.isApprovedStatus !== ApprovedStatus.APPROVED) {
     throw new AppError(
       httpStatus.NOT_ACCEPTABLE,
-      "You are not able to REJECT a Ride, you are SUSPENDED or PENDING driver"
+      `You are not able to REJECT a Ride, you are ${driver?.isApprovedStatus} driver`
     );
   }
+
+  const now = new Date();
+  const today = now.toDateString();
+  const lastCancel = user.lastCancelDate?.toDateString();
+  // reset counter if it's a new day
+  if (lastCancel !== today) {
+    user.cancelAttempts = 1;
+    user.lastCancelDate = now;
+  } else {
+    if (user.cancelAttempts) {
+      user.cancelAttempts += 1;
+    }
+  }
+
+  // block user if cancel limit exceeds
+  if (user.cancelAttempts && user.cancelAttempts > 3) {
+    user.isActive = ActiveStatus.BLOCKED;
+  }
+  await user.save();
+
   ride.status = RideStatus.REJECTED;
   ride.history.push({
     status: RideStatus.REJECTED,
