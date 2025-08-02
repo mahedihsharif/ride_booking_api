@@ -2,7 +2,7 @@ import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
-import { IUser } from "../modules/user/user.interface";
+import { ActiveStatus, IUser } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
 import { generateToken, verifyToken } from "./jwt";
 
@@ -46,10 +46,10 @@ export const createNewAccessTokenWithRefreshToken = async (
   }
 
   if (isUserExist) {
-    if (isUserExist.isBlocked)
+    if (isUserExist.isActive === ActiveStatus.BLOCKED)
       throw new AppError(
         httpStatus.BAD_REQUEST,
-        `User is ${isUserExist.isBlocked}`
+        `User is ${isUserExist.isActive}`
       );
   }
 
