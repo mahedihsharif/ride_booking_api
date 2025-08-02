@@ -236,7 +236,7 @@ const suspendDriver = async (driverId: string) => {
 const availableDriver = async () => {
   const drivers = await Driver.find({
     isApprovedStatus: ApprovedStatus.APPROVED,
-    isAvailable: true,
+    isAvailable: AvailabilityStatus.AVAILABLE,
   });
   if (drivers.length < 1)
     throw new AppError(
