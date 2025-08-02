@@ -40,7 +40,7 @@ The project includes:
 
 # JWT
 
-```
+```env
 JWT_ACCESS_SECRET=your_secret
 JWT_ACCESS_EXPIRES=your_expires
 JWT_REFRESH_SECRET=your_refresh_secret
@@ -49,25 +49,25 @@ JWT_REFRESH_EXPIRES=your_expires
 
 # BCRYPT
 
-```
+```env
 BCRYPT_SALT_ROUND=your_salt_round
 ```
 
 # OpenCase
 
-```
+```env
 OPEN_CASE_MAPS_API_KEY=your_key
 ```
 
 # PER KILOMETER RATE
 
-```
+```env
 PER_KM_RATE=your_rate
 ```
 
 # Cancel Window Time
 
-```
+```env
 CANCEL_WINDOW_TIME=your_cancel_time
 ```
 
@@ -75,7 +75,7 @@ CANCEL_WINDOW_TIME=your_cancel_time
 
 GEO_LOCATION_API=your_api
 
-````
+````env
 
 4. **Start the Server**
 ```bash
