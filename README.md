@@ -1,5 +1,7 @@
 # Ride Booking System
 
+# Live Link: https://ride-booking-api-pink.vercel.app/
+
 This is a backend API for a Ride Booking System where users (Riders and Drivers) can register, login, book rides, cancel rides (with daily limits), and more. The system enforces role-based access and JWT-based authentication.
 
 ## 🔧 Project Overview
@@ -38,26 +40,36 @@ The project includes:
 
 # JWT
 
+```
 JWT_ACCESS_SECRET=your_secret
 JWT_ACCESS_EXPIRES=your_expires
 JWT_REFRESH_SECRET=your_refresh_secret
 JWT_REFRESH_EXPIRES=your_expires
+```
 
 # BCRYPT
 
+```
 BCRYPT_SALT_ROUND=your_salt_round
+```
 
 # OpenCase
 
+```
 OPEN_CASE_MAPS_API_KEY=your_key
+```
 
 # PER KILOMETER RATE
 
+```
 PER_KM_RATE=your_rate
+```
 
 # Cancel Window Time
 
+```
 CANCEL_WINDOW_TIME=your_cancel_time
+```
 
 # Geo Api
 
