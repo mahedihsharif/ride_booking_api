@@ -68,7 +68,10 @@ const cancelRide = async (rideId: string, userId: string) => {
   if (!ride) throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
   if (ride) {
     if (ride.status !== RideStatus.REQUESTED) {
-      throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now");
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Cannot cancel this ride now, because ride status is ${ride.status}`
+      );
     }
   }
 
