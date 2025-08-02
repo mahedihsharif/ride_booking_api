@@ -1,0 +1,910 @@
+{
+	"info": {
+		"_postman_id": "4ddf0892-dc96-47f0-a680-6d4c0adf92b8",
+		"name": "Ride_Booking_Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36340948"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \r\n    \"name\":\"test user\",\r\n   \"email\":\"test@gmail.com\",\r\n   \"password\":\"test123\",\r\n   \"phone\":\"01700779325\"\r\n    \r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/users/register",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkZGZhMDU1ZDRkOTVhNDU0NWEyNDQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlJJREVSIiwiaWF0IjoxNzU0MTI4NTI1LCJleHAiOjE3NTQyMTQ5MjV9.MCN9OmdpcM3fo2mNKbyfdOuuGT9AbaXyiw-F0Aj9aAk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"role\":\"DRIVER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/users/688ddfa055d4d95a4545a244",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"688ddfa055d4d95a4545a244"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"email\":\"rahil@gmail.com\",\r\n     \"password\":\"Mahedi118\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/auth/login",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"email\":\"mahedi@gmail.com\",\r\n     \"password\":\"Mahedi118\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/auth/refresh-token",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"email\":\"mahedi@gmail.com\",\r\n     \"password\":\"Mahedi118\"\r\n}"
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/auth/logout",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ride",
+			"item": [
+				{
+					"name": "Request a Ride",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThlYWIwZjk1MDU2NmMxOWNiZjIiLCJlbWFpbCI6InJhaGlsQGdtYWlsLmNvbSIsInJvbGUiOiJSSURFUiIsImlhdCI6MTc1NDEzMTI3MSwiZXhwIjoxNzU0MjE3NjcxfQ.Zd1eCWvj1HmiqhGKcQgx74zIGi_jNDm3oOidb3IG9zs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"pickupLocation\":{\r\n        \"address\":\"Comilla\"\r\n     },\r\n     \"destinationLocation\":{\r\n        \"address\":\"Chittagong\"\r\n     }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/request",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Rider all Rides",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThiMWIwZjk1MDU2NmMxOWNiZWYiLCJlbWFpbCI6Im1haGVkaUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQxMTg0OTIsImV4cCI6MTc1NDIwNDg5Mn0.nVRgS9pyLFy73c-FOxlXRUqaU2alDqRWwcvbxewXMlQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/me",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Single Rider Ride",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThiMWIwZjk1MDU2NmMxOWNiZWYiLCJlbWFpbCI6Im1haGVkaUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQxMTg0OTIsImV4cCI6MTc1NDIwNDg5Mn0.nVRgS9pyLFy73c-FOxlXRUqaU2alDqRWwcvbxewXMlQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"pickupLocation\":{\r\n        \"address\":\"Mirpur 10\"\r\n     },\r\n     \"destinationLocation\":{\r\n        \"address\":\"Rampura\"\r\n     }\r\n}"
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/688dae9fdfb3d8fc657826ff",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"688dae9fdfb3d8fc657826ff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelled Rider Ride",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThlYWIwZjk1MDU2NmMxOWNiZjIiLCJlbWFpbCI6InJhaGlsQGdtYWlsLmNvbSIsInJvbGUiOiJSSURFUiIsImlhdCI6MTc1NDEzMTI3MSwiZXhwIjoxNzU0MjE3NjcxfQ.Zd1eCWvj1HmiqhGKcQgx74zIGi_jNDm3oOidb3IG9zs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/688dec1c55d4d95a4545a31e/cancel",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"688dec1c55d4d95a4545a31e",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Available Rides",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThiMWIwZjk1MDU2NmMxOWNiZWYiLCJlbWFpbCI6Im1haGVkaUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQxMTg5MDYsImV4cCI6MTc1NDIwNTMwNn0.xhGbRKvmPAFImGcIMn-pz8ggtGyovKyLzyfTNJz5VyA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/available",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"available"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "driver",
+			"item": [
+				{
+					"name": "Ride Status Update by Driver",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThmZWIwZjk1MDU2NmMxOWNiZjUiLCJlbWFpbCI6Iml6YXpAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDExODM5MSwiZXhwIjoxNzU0MjA0NzkxfQ.MbCMDkV3rvl5uvCpQVtp2WtwNjZqhkrd5wz6fRKb0QY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"COMPLETED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/688dbb581ebb9a08a859412a/status",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"688dbb581ebb9a08a859412a",
+								"status"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rejected Ride By Driver",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThmZWIwZjk1MDU2NmMxOWNiZjUiLCJlbWFpbCI6Iml6YXpAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDExODM5MSwiZXhwIjoxNzU0MjA0NzkxfQ.MbCMDkV3rvl5uvCpQVtp2WtwNjZqhkrd5wz6fRKb0QY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/688de1a855d4d95a4545a261/reject",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"688de1a855d4d95a4545a261",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accepted Ride By Driver",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThmZWIwZjk1MDU2NmMxOWNiZjUiLCJlbWFpbCI6Iml6YXpAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDExODM5MSwiZXhwIjoxNzU0MjA0NzkxfQ.MbCMDkV3rvl5uvCpQVtp2WtwNjZqhkrd5wz6fRKb0QY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/688dea3b55d4d95a4545a2e3/accept",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"688dea3b55d4d95a4545a2e3",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Driver Earnings",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThmZWIwZjk1MDU2NmMxOWNiZjUiLCJlbWFpbCI6Iml6YXpAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDExODM5MSwiZXhwIjoxNzU0MjA0NzkxfQ.MbCMDkV3rvl5uvCpQVtp2WtwNjZqhkrd5wz6fRKb0QY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " ",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/drivers/earnings",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"drivers",
+								"earnings"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver Availability Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThmZWIwZjk1MDU2NmMxOWNiZjUiLCJlbWFpbCI6Iml6YXpAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDExODM5MSwiZXhwIjoxNzU0MjA0NzkxfQ.MbCMDkV3rvl5uvCpQVtp2WtwNjZqhkrd5wz6fRKb0QY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " ",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/drivers/availability",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"drivers",
+								"availability"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Available Drivers for Rider",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThiMWIwZjk1MDU2NmMxOWNiZWYiLCJlbWFpbCI6Im1haGVkaUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQxMTg0OTIsImV4cCI6MTc1NDIwNDg5Mn0.nVRgS9pyLFy73c-FOxlXRUqaU2alDqRWwcvbxewXMlQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/drivers/available-driver",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"drivers",
+								"available-driver"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers Rides with Completed History",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYThmZWIwZjk1MDU2NmMxOWNiZjUiLCJlbWFpbCI6Iml6YXpAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDExODM5MSwiZXhwIjoxNzU0MjA0NzkxfQ.MbCMDkV3rvl5uvCpQVtp2WtwNjZqhkrd5wz6fRKb0QY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/rides/completed",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"completed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get All Rides By Admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjcyNjVlOTVhZTg2ZTk1NDFiZTUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDExODI3MiwiZXhwIjoxNzU0MjA0NjcyfQ.CALmAWfxiqiPXvXMywCrUaa8dSxu3S6NcnEyUhxBldQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Drivers By Admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjcyNjVlOTVhZTg2ZTk1NDFiZTUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDExODI3MiwiZXhwIjoxNzU0MjA0NjcyfQ.CALmAWfxiqiPXvXMywCrUaa8dSxu3S6NcnEyUhxBldQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/drivers",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approved a Driver Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjcyNjVlOTVhZTg2ZTk1NDFiZTUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDExODI3MiwiZXhwIjoxNzU0MjA0NjcyfQ.CALmAWfxiqiPXvXMywCrUaa8dSxu3S6NcnEyUhxBldQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/drivers/approve/688ddfa055d4d95a4545a244",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"drivers",
+								"approve",
+								"688ddfa055d4d95a4545a244"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suspended a Driver Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjcyNjVlOTVhZTg2ZTk1NDFiZTUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDExODI3MiwiZXhwIjoxNzU0MjA0NjcyfQ.CALmAWfxiqiPXvXMywCrUaa8dSxu3S6NcnEyUhxBldQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/drivers/suspend/688da8feb0f950566c19cbf5",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"drivers",
+								"suspend",
+								"688da8feb0f950566c19cbf5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Active or Blocked User By Admin",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjcyNjVlOTVhZTg2ZTk1NDFiZTUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDEzMDI2NywiZXhwIjoxNzU0MjE2NjY3fQ.DTMq_cHR7F2INEKRk_C7pgnFCVlgJmttW4sprTL-wLs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isAvailable\":true\r\n}"
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/users/block/688da8eab0f950566c19cbf2",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"block",
+								"688da8eab0f950566c19cbf2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Rides History",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkYjcyNjVlOTVhZTg2ZTk1NDFiZTUiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NDExODI3MiwiZXhwIjoxNzU0MjA0NjcyfQ.CALmAWfxiqiPXvXMywCrUaa8dSxu3S6NcnEyUhxBldQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/rides/history",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rides",
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gell All Riders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiOWM4MGE1ZjQzZDg2MjU1N2U3MzAiLCJlbWFpbCI6Im1haGVkaUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTQwNjI5NzcsImV4cCI6MTc1NDE0OTM3N30.Bhx2LVv6BHNmkBnFU0brHsHqii7JH5fvtXRv-sQApgs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " "
+						},
+						"url": {
+							"raw": "https://ride-booking-api-pink.vercel.app/api/v1/users",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-pink",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
