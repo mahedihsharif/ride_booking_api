@@ -33,12 +33,12 @@ const getRiderAllRides = catchAsync(
 
 const getRiderSingleRide = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.params.id;
+    const rideId = req.params.id;
 
     const verifiedToken = req.user;
 
     const result = await RideService.getRiderSingleRide(
-      userId,
+      rideId,
       verifiedToken as JwtPayload
     );
 

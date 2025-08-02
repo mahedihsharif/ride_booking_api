@@ -41,13 +41,14 @@ const getRiderAllRides = async (riderId: string) => {
   };
 };
 
-const getRiderSingleRide = async (userId: string, decodedToken: JwtPayload) => {
-  const ride = await Ride.findOne({ rider: userId });
+const getRiderSingleRide = async (rideId: string, decodedToken: JwtPayload) => {
+  const riderId = decodedToken.userId;
+  const ride = await Ride.findOne({ _id: rideId, rider: riderId });
   if (!ride) {
     throw new AppError(httpStatus.NOT_FOUND, "Ride doesn't found!");
   }
 
-  const isSelf = decodedToken.userId === userId;
+  const isSelf = decodedToken.userId === ride.rider;
 
   if (!isSelf) {
     if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
