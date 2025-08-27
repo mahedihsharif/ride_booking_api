@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { getGeoLocation } from "../../utils/getGeoLocation";
 import { vehicleSchema } from "../vehicle/vehicle.model";
-import { ApprovedStatus, AvailabilityStatus } from "./driver.interface";
+import { ApprovedStatus } from "./driver.interface";
 
 const locationSchema = new Schema(
   {
@@ -16,9 +16,8 @@ const driverSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     isAvailable: {
-      type: String,
-      enum: Object.keys(AvailabilityStatus),
-      default: AvailabilityStatus.AVAILABLE,
+      type: Boolean,
+      default: false,
     },
     isApprovedStatus: {
       type: String,

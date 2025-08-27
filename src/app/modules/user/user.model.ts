@@ -15,8 +15,8 @@ const userSchema = new Schema<IUser>(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: Object.values(Role),
-      default: Role.RIDER,
+      enum: Object.values([Role.RIDER, Role.DRIVER]),
+      required: true,
     },
     phone: {
       type: String,
@@ -41,21 +41,6 @@ const userSchema = new Schema<IUser>(
   { timestamps: true, versionKey: false }
 );
 
-// // create Rider Model at the time of Creating User Model because user role by default rider
-// userSchema.post("save", async function (doc, next) {
-//   try {
-//     if (doc.role === Role.RIDER) {
-//       const existingRider = await Rider.findOne({ user: doc._id });
-//       if (!existingRider) {
-//         await Rider.create({ user: doc._id });
-//       }
-//     }
-//     next();
-//   } catch (error: any) {
-//     next(error);
-//   }
-// });
-
 // change role from rider to driver this hook will work
 userSchema.post("findOneAndUpdate", async function (doc, next) {
   try {
@@ -76,26 +61,24 @@ userSchema.post("findOneAndUpdate", async function (doc, next) {
 });
 
 // // change role from driver to rider then this hook will work
-// userSchema.post("findOneAndUpdate", async function (doc, next) {
-//   try {
-//     if (doc?.role === Role.RIDER) {
-//       const existingRider = await Rider.findOne({ user: doc._id });
+userSchema.post("findOneAndUpdate", async function (doc, next) {
+  try {
+    if (!doc) return next();
 
-//       if (!existingRider) {
-//         await Rider.create({
-//           user: doc._id,
-//         });
-//         await Driver.findOneAndDelete({
-//           user: doc._id,
-//         });
-//       }
-//     }
+    if (doc.role === Role.DRIVER) {
+      const existingDriver = await Driver.findOne({ user: doc._id });
+      if (!existingDriver) {
+        await Driver.create({ user: doc._id });
+      }
+    } else {
+      await Driver.findOneAndDelete({ user: doc._id });
+    }
 
-//     next();
-//   } catch (error: any) {
-//     next(error);
-//   }
-// });
+    next();
+  } catch (error: any) {
+    next(error);
+  }
+});
 
 // change role from RIDER or DRIVER to ADMIN then this hook will work
 userSchema.post("findOneAndUpdate", async function (doc, next) {

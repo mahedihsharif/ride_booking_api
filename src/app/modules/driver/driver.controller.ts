@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { AvailabilityStatus } from "./driver.interface";
+import { ApprovedStatus } from "./driver.interface";
 import { DriverService } from "./driver.service";
 
 const acceptRide = catchAsync(
@@ -81,12 +82,22 @@ const setAvailability = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: `Availability updated to ${
-        result.isAvailable === AvailabilityStatus.AVAILABLE
-          ? "Online"
-          : "Offline"
-      }`,
+      message: `You are now ${result.isAvailable ? "Online" : "Offline"}`,
       data: result,
+    });
+  }
+);
+
+const getSingleDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await DriverService.getSingleDriver(decodedToken.userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Your Profile Retrieved Successfully!",
+      data: result.data,
     });
   }
 );
@@ -103,6 +114,26 @@ const getAllDrivers = catchAsync(
         drivers: result.data,
         meta: result.meta,
       },
+    });
+  }
+);
+
+const getAllDriversInfo = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { page, limit, search, status } = req.query;
+
+    const drivers = await DriverService.getAllDriversInfo({
+      page: Number(page) || 1,
+      limit: Number(limit) || 5,
+      search: search as string,
+      status: status as ApprovedStatus,
+    });
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "All Drivers Retrieved Successfully!",
+      data: drivers,
     });
   }
 );
@@ -160,4 +191,6 @@ export const DriverController = {
   approveDriver,
   suspendDriver,
   availableDriver,
+  getSingleDriver,
+  getAllDriversInfo,
 };

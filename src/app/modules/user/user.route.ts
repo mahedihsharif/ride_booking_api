@@ -12,12 +12,15 @@ router.post(
   validateRequest(createUserZodSchema),
   UserController.createUser
 );
-router.get("/", checkAuth(Role.ADMIN), UserController.getAllRiders);
+router.get("/riders", checkAuth(Role.ADMIN), UserController.getAllRiders);
+router.get("/drivers", checkAuth(Role.ADMIN), UserController.getAllDrivers);
+router.get("/me", checkAuth(...Object.values(Role)), UserController.getMe);
+router.patch("/block/:id", checkAuth(Role.ADMIN), UserController.blockedUser);
 
 router.patch(
   "/:id",
   checkAuth(...Object.values(Role)),
   UserController.updateUser
 );
-router.patch("/block/:id", checkAuth(Role.ADMIN), UserController.blockedUser);
+
 export const UserRoutes = router;

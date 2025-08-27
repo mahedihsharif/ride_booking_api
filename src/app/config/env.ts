@@ -17,6 +17,12 @@ interface EnvConfig {
   PER_KM_RATE: string;
   CANCEL_WINDOW_TIME: string;
   GEO_LOCATION_API: string;
+  FRONTEND_URL: string;
+  TWILIO_SID: string;
+  TWILIO_AUTH_TOKEN: string;
+  TWILIO_WHATSAPP_NUMBER: string;
+  TWILIO_PHONE_NUMBER: string;
+  LIVE_URL: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -33,6 +39,12 @@ const loadEnvVariables = (): EnvConfig => {
     "PER_KM_RATE",
     "CANCEL_WINDOW_TIME",
     "GEO_LOCATION_API",
+    "FRONTEND_URL",
+    "TWILIO_SID",
+    "TWILIO_AUTH_TOKEN",
+    "TWILIO_WHATSAPP_NUMBER",
+    "TWILIO_PHONE_NUMBER",
+    "LIVE_URL",
   ];
   requiredEnvVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -54,6 +66,12 @@ const loadEnvVariables = (): EnvConfig => {
     PER_KM_RATE: process.env.PER_KM_RATE as string,
     CANCEL_WINDOW_TIME: process.env.CANCEL_WINDOW_TIME as string,
     GEO_LOCATION_API: process.env.GEO_LOCATION_API as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
+    TWILIO_SID: process.env.TWILIO_SID as string,
+    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN as string,
+    TWILIO_WHATSAPP_NUMBER: process.env.TWILIO_WHATSAPP_NUMBER as string,
+    TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER as string,
+    LIVE_URL: process.env.LIVE_URL as string,
   };
 };
 

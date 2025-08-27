@@ -21,6 +21,10 @@ export const createUserZodSchema = z.object({
       message:
         "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }),
+  role: z.enum([Role.RIDER, Role.DRIVER], {
+    required_error: "Role is required",
+    invalid_type_error: "Role must be either rider or driver",
+  }),
 });
 
 export const updateUserZodSchema = z.object({
@@ -40,7 +44,12 @@ export const updateUserZodSchema = z.object({
     .min(6, { message: "Password must be at least 6 characters long." })
     .optional(),
 
-  role: z.enum(Object.values(Role) as [string]).optional(),
+  role: z
+    .enum([Role.RIDER, Role.DRIVER], {
+      required_error: "Role is required",
+      invalid_type_error: "Role must be either rider or driver",
+    })
+    .optional(),
   phone: z
     .string({ invalid_type_error: "Phone number must be string" })
     .regex(/^(?:\+880|880)?1[3-9][0-9]{8}$/, {

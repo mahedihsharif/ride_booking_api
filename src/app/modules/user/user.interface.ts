@@ -17,7 +17,7 @@ export interface IUser {
   email: string;
   password: string;
   phone: string;
-  role?: Role;
+  role: Role;
   isActive?: ActiveStatus;
   cancelAttempts?: number;
   lastCancelDate?: Date;

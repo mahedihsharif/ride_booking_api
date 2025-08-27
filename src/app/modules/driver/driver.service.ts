@@ -6,7 +6,7 @@ import { RideStatus } from "../ride/ride.interface";
 import { Ride } from "../ride/ride.model";
 import { ActiveStatus, Role } from "../user/user.interface";
 import { User } from "../user/user.model";
-import { ApprovedStatus, AvailabilityStatus } from "./driver.interface";
+import { ApprovedStatus, IDriverQuery } from "./driver.interface";
 import { Driver } from "./driver.model";
 
 const acceptRide = async (rideId: string, driverId: string) => {
@@ -25,7 +25,7 @@ const acceptRide = async (rideId: string, driverId: string) => {
 
   if (
     driver?.isApprovedStatus === ApprovedStatus.APPROVED &&
-    driver.isAvailable === AvailabilityStatus.AVAILABLE
+    driver.isAvailable
   ) {
     ride.status = RideStatus.ACCEPTED;
     ride.driver = new Types.ObjectId(driverId);
@@ -33,7 +33,7 @@ const acceptRide = async (rideId: string, driverId: string) => {
       status: RideStatus.ACCEPTED,
       timestamp: new Date(),
     });
-    driver.isAvailable = AvailabilityStatus.UN_AVAILABLE;
+    driver.isAvailable = !driver.isAvailable;
     await driver.save();
     await ride.save();
     return ride;
@@ -96,7 +96,7 @@ const rejectRide = async (rideId: string, driverId: string) => {
     status: RideStatus.REJECTED,
     timestamp: new Date(),
   });
-  driver.isAvailable = AvailabilityStatus.AVAILABLE;
+  driver.isAvailable = driver.isAvailable;
   await driver.save();
   await ride.save();
   return ride;
@@ -137,7 +137,7 @@ const updateStatus = async (
   if (status === RideStatus.PICKED_UP) {
     ride.history.push({ status: RideStatus.PICKED_UP, timestamp: now });
     if (driver) {
-      driver.isAvailable = AvailabilityStatus.UN_AVAILABLE;
+      driver.isAvailable = driver.isAvailable;
       await driver.save();
     }
   }
@@ -145,7 +145,7 @@ const updateStatus = async (
   if (status === RideStatus.IN_TRANSIT) {
     ride.history.push({ status: RideStatus.IN_TRANSIT, timestamp: now });
     if (driver) {
-      driver.isAvailable = AvailabilityStatus.UN_AVAILABLE;
+      driver.isAvailable = driver.isAvailable;
       await driver.save();
     }
   }
@@ -153,7 +153,7 @@ const updateStatus = async (
   if (status === RideStatus.COMPLETED) {
     ride.history.push({ status: RideStatus.COMPLETED, timestamp: now });
     if (driver) {
-      driver.isAvailable = AvailabilityStatus.AVAILABLE;
+      driver.isAvailable = !driver.isAvailable;
       await driver.save();
     }
   }
@@ -184,12 +184,22 @@ const driverEarnings = async (driverId: string) => {
 const setAvailability = async (driverId: string) => {
   const driver = await Driver.findOne({ user: driverId });
   if (!driver) throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
-
-  driver.isAvailable = AvailabilityStatus.AVAILABLE;
+  if (driver.isAvailable) {
+    driver.isAvailable = !driver.isAvailable;
+    await driver.save();
+    return driver;
+  }
+  driver.isAvailable = !driver.isAvailable;
   await driver.save();
   return driver;
 };
+const getSingleDriver = async (userId: string) => {
+  const driver = await Driver.findOne({ user: userId });
 
+  return {
+    data: driver,
+  };
+};
 const getAllDrivers = async () => {
   const drivers = await User.find({ role: Role.DRIVER });
   const totalDrivers = await User.countDocuments({ role: Role.DRIVER });
@@ -198,6 +208,81 @@ const getAllDrivers = async () => {
     meta: {
       total: totalDrivers,
     },
+  };
+};
+
+const getAllDriversInfo = async (query: IDriverQuery) => {
+  const { page = 1, limit = 10, search, status } = query;
+
+  const skip = (page - 1) * limit;
+
+  // Search condition
+  const searchCondition: any = { role: Role.DRIVER };
+
+  if (search) {
+    searchCondition.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+      { phone: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  const pipeline: any[] = [
+    {
+      $match: searchCondition,
+    },
+    {
+      $lookup: {
+        from: "drivers",
+        localField: "_id",
+        foreignField: "user",
+        as: "driverInfo",
+      },
+    },
+    {
+      $unwind: {
+        path: "$driverInfo",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+
+  // status filter add
+  if (status) {
+    pipeline.push({
+      $match: { "driverInfo.isApprovedStatus": status },
+    });
+  }
+
+  const countPipeline = [...pipeline, { $count: "total" }];
+  const totalCountResult = await User.aggregate(countPipeline);
+  const total = totalCountResult.length > 0 ? totalCountResult[0].total : 0;
+
+  // pagination apply
+  pipeline.push({ $skip: skip });
+  pipeline.push({ $limit: limit });
+
+  // projection
+  pipeline.push({
+    $project: {
+      name: 1,
+      email: 1,
+      phone: 1,
+      role: 1,
+      isApprovedStatus: "$driverInfo.isApprovedStatus",
+    },
+  });
+
+  const drivers = await User.aggregate(pipeline);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+    drivers,
   };
 };
 
@@ -236,7 +321,7 @@ const suspendDriver = async (driverId: string) => {
 const availableDriver = async () => {
   const drivers = await Driver.find({
     isApprovedStatus: ApprovedStatus.APPROVED,
-    isAvailable: AvailabilityStatus.AVAILABLE,
+    isAvailable: true,
   });
   if (drivers.length < 1)
     throw new AppError(
@@ -257,4 +342,6 @@ export const DriverService = {
   approveDriver,
   suspendDriver,
   availableDriver,
+  getSingleDriver,
+  getAllDriversInfo,
 };

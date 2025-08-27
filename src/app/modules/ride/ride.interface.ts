@@ -9,7 +9,11 @@ export enum RideStatus {
   CANCELLED = "CANCELLED",
   REJECTED = "REJECTED",
 }
-
+export enum PaymentMethodStatus {
+  CASH = "CASH",
+  BKASH = "BKASH",
+  NAGAD = "NAGAD",
+}
 export interface ILocation {
   address: string;
   lat: number;
@@ -26,7 +30,18 @@ export interface IRide {
   driver?: Types.ObjectId;
   pickupLocation: ILocation;
   destinationLocation: ILocation;
+  paymentMethod: PaymentMethodStatus;
   fare: number;
   status: RideStatus;
   history: IStatusHistory[];
+}
+
+export interface IRidesQueryFilters {
+  page?: number;
+  limit?: number;
+  status?: string;
+  driver?: string;
+  rider?: string;
+  startDate?: string;
+  endDate?: string;
 }

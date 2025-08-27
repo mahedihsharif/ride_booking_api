@@ -7,11 +7,6 @@ export enum ApprovedStatus {
   SUSPENDED = "SUSPENDED",
 }
 
-export enum AvailabilityStatus {
-  AVAILABLE = "AVAILABLE",
-  UN_AVAILABLE = "UN_AVAILABLE",
-}
-
 export interface ILocation {
   location: string;
   lat: number;
@@ -20,8 +15,18 @@ export interface ILocation {
 
 export interface IDriver {
   user: Types.ObjectId;
-  isAvailable: AvailabilityStatus;
+  isAvailable: boolean;
   isApprovedStatus: ApprovedStatus;
   currentLocation: ILocation;
   vehicle: IVehicle;
+}
+
+export interface IDriverQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?:
+    | ApprovedStatus.PENDING
+    | ApprovedStatus.APPROVED
+    | ApprovedStatus.SUSPENDED;
 }

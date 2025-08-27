@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { envVars } from "../../config/env";
 import { calculateDistanceInKm } from "../../utils/calculateDistanceInKm";
 import { getCoordinatesFromAddress } from "../../utils/getCoordinates";
-import { IRide, RideStatus } from "./ride.interface";
+import { IRide, PaymentMethodStatus, RideStatus } from "./ride.interface";
 
 const locationSchema = {
   address: { type: String, required: true },
@@ -28,7 +28,11 @@ const rideSchema = new Schema<IRide>(
 
     pickupLocation: { type: locationSchema, required: true, _id: false },
     destinationLocation: { type: locationSchema, required: true, _id: false },
-
+    paymentMethod: {
+      type: String,
+      enum: Object.keys(PaymentMethodStatus),
+      required: true,
+    },
     fare: { type: Number },
 
     status: {
