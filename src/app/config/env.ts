@@ -22,7 +22,6 @@ interface EnvConfig {
   TWILIO_AUTH_TOKEN: string;
   TWILIO_WHATSAPP_NUMBER: string;
   TWILIO_PHONE_NUMBER: string;
-  LIVE_URL: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -44,7 +43,6 @@ const loadEnvVariables = (): EnvConfig => {
     "TWILIO_AUTH_TOKEN",
     "TWILIO_WHATSAPP_NUMBER",
     "TWILIO_PHONE_NUMBER",
-    "LIVE_URL",
   ];
   requiredEnvVariables.forEach((key) => {
     if (!process.env[key]) {
@@ -71,7 +69,6 @@ const loadEnvVariables = (): EnvConfig => {
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN as string,
     TWILIO_WHATSAPP_NUMBER: process.env.TWILIO_WHATSAPP_NUMBER as string,
     TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER as string,
-    LIVE_URL: process.env.LIVE_URL as string,
   };
 };
 
