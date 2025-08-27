@@ -11,7 +11,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [envVars.FRONTEND_URL, envVars.LIVE_URL],
+    origin: [envVars.FRONTEND_URL],
     credentials: true,
   })
 );
