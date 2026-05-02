@@ -39,6 +39,9 @@ router.get("/ride/:id", checkAuth(Role.DRIVER), RideController.getSingleRide);
 router.get("/:id", checkAuth(Role.RIDER), RideController.getRiderSingleRide);
 router.patch("/:id/cancel", checkAuth(Role.RIDER), RideController.cancelRide);
 
+/*--------------- Admin Routes Method -------------------*/
+router.get("/admin/:id", checkAuth(Role.ADMIN), RideController.getSingleRideByAdmin);
+
 /*--------------- Driver Routes Method -------------------*/
 
 router.patch(

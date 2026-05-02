@@ -219,6 +219,19 @@ const getAllCompletedRides = catchAsync(
   }
 );
 
+const getSingleRideByAdmin = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const rideId = req.params.id;
+    const result = await RideService.getSingleRideByAdmin(rideId);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Ride Retrieved Successfully",
+      data: result,
+    });
+  }
+);
+
 export const RideController = {
   requestRide,
   getRiderAllRides,
@@ -231,4 +244,5 @@ export const RideController = {
   getDriverAllRides,
   getSingleRide,
   activeRide,
+  getSingleRideByAdmin,
 };

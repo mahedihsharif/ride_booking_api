@@ -5,6 +5,7 @@ import { RideRoutes } from "../modules/ride/ride.route";
 
 import { AnalyticsRoutes } from "../modules/analytics/analytics.route";
 import { SMSRoutes } from "../modules/SMS/sms.route";
+import { SOSRoutes } from "../modules/sos/sos.route";
 import { StatsRoutes } from "../modules/stats/stats.route";
 import { UserRoutes } from "../modules/user/user.route";
 import { VehicleRoutes } from "../modules/vehicle/vehicle.route";
@@ -43,6 +44,10 @@ const moduleRoutes = [
   {
     path: "/sms",
     route: SMSRoutes,
+  },
+  {
+    path: "/sos",
+    route: SOSRoutes,
   },
 ];
 

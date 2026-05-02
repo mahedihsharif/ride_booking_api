@@ -436,6 +436,18 @@ const getAllCompletedRides = async (driverId: string) => {
   };
 };
 
+const getSingleRideByAdmin = async (rideId: string) => {
+  const ride = await Ride.findById(rideId)
+    .populate("rider", "name email phone")
+    .populate("driver", "name email phone");
+
+  if (!ride) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
+  }
+
+  return ride;
+};
+
 export const RideService = {
   requestRide,
   getRiderAllRides,
@@ -448,4 +460,5 @@ export const RideService = {
   getDriverAllRides,
   getSingleRide,
   activeRide,
+  getSingleRideByAdmin,
 };
