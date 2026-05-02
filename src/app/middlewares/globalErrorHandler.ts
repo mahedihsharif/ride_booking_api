@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { JsonWebTokenError } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import handleCastError from "../helpers/handleCastError";
@@ -42,6 +43,11 @@ const globalErrorHandler = (
     statusCode = simplifiedError.statusCode;
     errorSources = simplifiedError.errorSources as TErrorSources[];
     message = simplifiedError.message;
+  }
+  // JWT errors
+  else if (err instanceof JsonWebTokenError) {
+    statusCode = 401;
+    message = err.message;
   }
   //custom app error
   else if (err instanceof AppError) {

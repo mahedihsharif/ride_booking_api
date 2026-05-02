@@ -9,12 +9,13 @@ export const sendSMSController = async (req: Request, res: Response) => {
         .status(400)
         .json({ success: false, message: "Missing fields" });
     }
-
     const msg = await twilioService.sendSMS(to, message);
     res.status(200).json({ success: true, sid: msg.sid });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error });
+  } catch (error: any) {
+    console.error("SMS Error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: error?.message || "SMS failed" });
   }
 };
 
@@ -26,11 +27,12 @@ export const sendWhatsAppController = async (req: Request, res: Response) => {
         .status(400)
         .json({ success: false, message: "Missing fields" });
     }
-
     const msg = await twilioService.sendWhatsApp(to, message);
     res.status(200).json({ success: true, sid: msg.sid });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error });
+  } catch (error: any) {
+    console.error("WhatsApp Error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: error?.message || "WhatsApp failed" });
   }
 };

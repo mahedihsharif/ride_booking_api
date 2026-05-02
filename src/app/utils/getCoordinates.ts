@@ -20,6 +20,12 @@ export const getCoordinatesFromAddress = async (address: string) => {
       lng: location.lng,
     };
   } catch (error: any) {
-    throw new Error(error);
+    if (error.response?.status === 401) {
+      throw new Error("Invalid OpenCage API key. Please check your OPEN_CASE_MAPS_API_KEY environment variable.");
+    } else if (error.response?.status === 429) {
+      throw new Error("OpenCage API rate limit exceeded. Please try again later.");
+    } else {
+      throw new Error(`Geocoding failed: ${error.message || "Unknown error"}`);
+    }
   }
 };

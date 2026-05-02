@@ -1,12 +1,17 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 
+ type TTokenPayload = {
+  userId: string;
+  email: string;
+  role: string;
+};
+
 export const generateToken = (
-  payload: JwtPayload,
+  payload: TTokenPayload,
   secret: string,
   expiresIn: string
 ) => {
   const token = jwt.sign(payload, secret, { expiresIn } as SignOptions);
-
   return token;
 };
 

@@ -10,6 +10,25 @@ import { IRide, IRidesQueryFilters, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 
 const requestRide = async (riderId: string, payload: IRide) => {
+  const activeRide = await Ride.findOne({
+    rider: riderId,
+    status: {
+      $in: [
+        RideStatus.REQUESTED,
+        RideStatus.ACCEPTED,
+        RideStatus.PICKED_UP,
+        RideStatus.IN_TRANSIT,
+      ],
+    },
+  });
+
+  if (activeRide) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "You already have an active ride request."
+    );
+  }
+
   const pickupAddress = payload.pickupLocation.address;
   const destinationAddress = payload.destinationLocation.address;
   const pickupCoords = await getCoordinatesFromAddress(pickupAddress);
@@ -115,12 +134,7 @@ const getDriverAllRides = async (
     .skip(skip)
     .limit(limit);
 
-  if (!rides.length) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      "No rides found with assigned driver"
-    );
-  }
+
 
   const totalRides = await Ride.countDocuments(query);
 
@@ -180,16 +194,17 @@ const cancelRide = async (rideId: string, userId: string) => {
     (entry) => entry.status === RideStatus.REQUESTED
   );
 
-  if (!requestedAt?.timestamp) throw new Error("Requested time missing");
+  if (!requestedAt?.timestamp) throw new AppError(httpStatus.BAD_REQUEST, "Requested time missing");
 
   const now = new Date();
-  const diffMs = now.getTime() - requestedAt?.timestamp.getTime();
+  const diffMs = now.getTime() - requestedAt.timestamp.getTime();
   const diffMinutes = diffMs / (1000 * 60);
 
   const CANCEL_WINDOW = Number(envVars.CANCEL_WINDOW_TIME) || 2;
 
   if (diffMinutes > CANCEL_WINDOW) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
       `You can cancel only within ${CANCEL_WINDOW} minutes of requesting`
     );
   }
@@ -201,9 +216,7 @@ const cancelRide = async (rideId: string, userId: string) => {
     user.cancelAttempts = 1;
     user.lastCancelDate = now;
   } else {
-    if (user.cancelAttempts) {
-      user.cancelAttempts += 1;
-    }
+    user.cancelAttempts = (user.cancelAttempts || 0) + 1;
   }
 
   // block user if cancel limit exceeds
@@ -413,12 +426,7 @@ const getAllCompletedRides = async (driverId: string) => {
     status: RideStatus.COMPLETED,
   });
 
-  if (rides.length < 1) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      "Rides is not found with Completed History"
-    );
-  }
+
 
   return {
     data: rides,

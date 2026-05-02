@@ -33,7 +33,7 @@ const acceptRide = async (rideId: string, driverId: string) => {
       status: RideStatus.ACCEPTED,
       timestamp: new Date(),
     });
-    driver.isAvailable = !driver.isAvailable;
+    driver.isAvailable = false;
     await driver.save();
     await ride.save();
     return ride;
@@ -96,8 +96,6 @@ const rejectRide = async (rideId: string, driverId: string) => {
     status: RideStatus.REJECTED,
     timestamp: new Date(),
   });
-  driver.isAvailable = driver.isAvailable;
-  await driver.save();
   await ride.save();
   return ride;
 };
@@ -111,7 +109,7 @@ const updateStatus = async (
   const ride = await Ride.findOne({ _id: rideId, driver: driverObjId });
   const driver = await Driver.findOne({ user: driverId });
 
-  if (!ride) throw new Error("Ride not found or not assigned to you");
+  if (!ride) throw new AppError(httpStatus.NOT_FOUND, "Ride not found or not assigned to you");
 
   if (!allowedStatuses.includes(status)) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid status update");
@@ -125,7 +123,8 @@ const updateStatus = async (
   };
 
   if (validTransitions[currentStatus] !== status) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
       `You can't change status from ${currentStatus} to ${status}`
     );
   }
@@ -136,24 +135,16 @@ const updateStatus = async (
   const now = new Date();
   if (status === RideStatus.PICKED_UP) {
     ride.history.push({ status: RideStatus.PICKED_UP, timestamp: now });
-    if (driver) {
-      driver.isAvailable = driver.isAvailable;
-      await driver.save();
-    }
   }
 
   if (status === RideStatus.IN_TRANSIT) {
     ride.history.push({ status: RideStatus.IN_TRANSIT, timestamp: now });
-    if (driver) {
-      driver.isAvailable = driver.isAvailable;
-      await driver.save();
-    }
   }
 
   if (status === RideStatus.COMPLETED) {
     ride.history.push({ status: RideStatus.COMPLETED, timestamp: now });
     if (driver) {
-      driver.isAvailable = !driver.isAvailable;
+      driver.isAvailable = true;
       await driver.save();
     }
   }
@@ -168,9 +159,7 @@ const driverEarnings = async (driverId: string) => {
     status: RideStatus.COMPLETED,
   });
 
-  if (!rides) {
-    throw new AppError(httpStatus.NOT_FOUND, "Ride not found for this driver");
-  }
+
 
   const totalEarnings = rides.reduce((sum, ride) => sum + (ride.fare || 0), 0);
 

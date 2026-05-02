@@ -20,44 +20,39 @@ const createUser = async (payload: IUser) => {
   if (!allowedRolesForCreation.includes(role)) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "Invalid Role, You can't add as a ADMIN Role"
+      "Invalid Role, you can only register as RIDER or DRIVER"
     );
   }
 
-  if (role !== Role.ADMIN) {
-    if (role === Role.RIDER) {
-      const hashedPassword = await bcryptjs.hash(
-        password as string,
-        Number(envVars.BCRYPT_SALT_ROUND)
-      );
+  const hashedPassword = await bcryptjs.hash(
+    password as string,
+    Number(envVars.BCRYPT_SALT_ROUND)
+  );
 
-      const user = await User.create({
-        email,
-        role,
-        password: hashedPassword,
-        ...rest,
-      });
-      const { password: returnPassword, ...restData } = user.toObject();
-      return restData;
-    } else if (role === Role.DRIVER) {
-      const hashedPassword = await bcryptjs.hash(
-        password as string,
-        Number(envVars.BCRYPT_SALT_ROUND)
-      );
-
-      const user = await User.create({
-        email,
-        password: hashedPassword,
-        role,
-        ...rest,
-      });
-      await Driver.create({
-        user: user._id,
-      });
-      const { password: returnPassword, ...restData } = user.toObject();
-      return restData;
-    }
+  if (role === Role.RIDER) {
+    const user = await User.create({
+      email,
+      role,
+      password: hashedPassword,
+      ...rest,
+    });
+    const { password: returnPassword, ...restData } = user.toObject();
+    return restData;
+  } else if (role === Role.DRIVER) {
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      role,
+      ...rest,
+    });
+    await Driver.create({
+      user: user._id,
+    });
+    const { password: returnPassword, ...restData } = user.toObject();
+    return restData;
   }
+  
+  throw new AppError(httpStatus.BAD_REQUEST, "Role not supported");
 };
 
 const getAllRiders = async (
