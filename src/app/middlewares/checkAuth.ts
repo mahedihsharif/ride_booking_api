@@ -9,13 +9,12 @@ import { verifyToken } from "../utils/jwt";
 export const checkAuth =
   (...authRoles: string[]) =>
   async (req: Request, _res: Response, next: NextFunction) => {
-    console.log("Checking authentication...");
     try {
       const authHeader = req.headers.authorization;
       const cookieToken = req.cookies?.accessToken;
 
       let accessToken: string | undefined;
-      console.log({ auth: authHeader, cookie: cookieToken });
+
       if (authHeader && authHeader.startsWith("Bearer ")) {
         accessToken = authHeader.split(" ")[1];
       } else if (authHeader) {
@@ -25,7 +24,10 @@ export const checkAuth =
       }
 
       if (!accessToken) {
-        throw new AppError(httpStatus.UNAUTHORIZED, "No Token Found! Please provide a valid token in Authorization header or login to get a new token.");
+        throw new AppError(
+          httpStatus.UNAUTHORIZED,
+          "No Token Found! Please provide a valid token in Authorization header or login to get a new token.",
+        );
       }
 
       const verifiedToken = verifyToken(
