@@ -20,7 +20,12 @@ app.set("trust proxy", 1);
 app.use("/api/v1", router);
 
 app.get("/", (_req: Request, res: Response) => {
-  res.send("Welcome to Ride Booking Backend!");
+  res.status(200).json({
+    status: "OK",
+    message: "Welcome to Ride Booking Backend!",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 app.get("/health", (_req: Request, res: Response) => {
