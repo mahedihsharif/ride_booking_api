@@ -7,13 +7,28 @@ let server: Server;
 
 const startServer = async () => {
   try {
-    await mongoose.connect(envVars.DB_URL);
-    console.log("Mongodb Connected Successfully!");
+    console.log("Starting server...");
+    console.log(`Environment: ${envVars.NODE_ENV}`);
+    console.log(`Port: ${envVars.PORT}`);
+    console.log(`Database URL: ${envVars.DB_URL ? "Set" : "Not set"}`);
+    
+    // Try to connect to database, but don't fail if it doesn't work
+    try {
+      await mongoose.connect(envVars.DB_URL);
+      console.log("Mongodb Connected Successfully!");
+    } catch (dbError) {
+      console.error("Database connection failed, but starting server anyway:", dbError instanceof Error ? dbError.message : String(dbError));
+      console.warn("Server will start without database connection");
+    }
+    
     server = app.listen(envVars.PORT, () => {
       console.log(`Server is Listening at Port ${envVars.PORT}`);
+      console.log("Server started successfully!");
     });
   } catch (error) {
-    console.log(error);
+    console.error("Failed to start server:", error);
+    console.error("Error details:", error instanceof Error ? error.message : String(error));
+    process.exit(1);
   }
 };
 

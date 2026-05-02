@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: envVars.FRONTEND_URL,
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 app.set("trust proxy", 1);
@@ -21,6 +21,14 @@ app.use("/api/v1", router);
 
 app.get("/", (_req: Request, res: Response) => {
   res.send("Welcome to Ride Booking Backend!");
+});
+
+app.get("/health", (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
 });
 
 app.use(globalErrorHandler);
