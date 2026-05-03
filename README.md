@@ -1,6 +1,6 @@
 # Ride Booking System
 
-# Live Link: https://ride-booking-api-5hd1.onrender.com
+# Live Link: https://ride-booking-api-5hd1.onrender.com/
 
 This is a backend API for a Ride Booking System where users (Riders and Drivers) can register, login, book rides, cancel rides (with daily limits), and more. The system enforces role-based access and JWT-based authentication.
 
